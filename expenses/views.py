@@ -1,7 +1,13 @@
+import json
+
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+
+
+from userpreferences.models import UserPreference
 
 from .models import Category, Expense
 
@@ -10,6 +16,7 @@ from .models import Category, Expense
 def index(request):
     categories = Category.objects.all()
     expenses = Expense.objects.filter(owner=request.user)
+    currency = UserPreference.objects.get(user=request.user).currency
     paginator = Paginator(expenses, 2)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -17,6 +24,7 @@ def index(request):
     context = {
         'expenses': expenses,
         'page_obj': page_obj,
+        'currency': currency,
     }
     return render(request, 'expenses/index.html', context)
 
@@ -92,3 +100,18 @@ def delete_expense(request, pk):
     expense.delete()
     messages.success(request, 'Expense deleted successfully')
     return redirect('expenses')
+
+
+def search_expenses(request):
+    if request.method == 'POST':
+        search_str = json.loads(request.body).get('searchText')
+
+        expenses = Expense.objects.filter(
+            amount__istartswith=search_str, owner=request.user) | Expense.objects.filter(
+            date__istartswith=search_str, owner=request.user) | Expense.objects.filter(
+            description__icontains=search_str, owner=request.user) | Expense.objects.filter(
+            category__icontains=search_str, owner=request.user)
+
+        data = expenses.values()
+
+        return JsonResponse(list(data), safe=False)
