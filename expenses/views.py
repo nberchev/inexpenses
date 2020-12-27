@@ -14,7 +14,6 @@ from .models import Category, Expense
 
 @login_required(login_url='/authentication/login')
 def index(request):
-    categories = Category.objects.all()
     expenses = Expense.objects.filter(owner=request.user)
     currency = UserPreference.objects.get(user=request.user).currency
     paginator = Paginator(expenses, 2)
@@ -84,7 +83,6 @@ def edit_expense(request, pk):
             messages.error(request, 'Description field is required')
             return render(request, 'expenses/edit_expense.html', context)
 
-        expense.owner = request.user
         expense.amount = amount
         expense.date = date
         expense.category = category
