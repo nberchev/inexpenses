@@ -17,6 +17,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 from validate_email import validate_email
 
+from userpreferences.models import UserPreference
+
 from .utils import token_generator
 
 
@@ -76,6 +78,8 @@ class RegistrationView(View):
                 user.set_password(password)
                 user.is_active = False
                 user.save()
+
+                user_preference = UserPreference.objects.create(user=user, currency='BGN - Bulgarian Lev')
 
                 domain = get_current_site(request).domain
                 uidb64 = urlsafe_base64_encode(force_bytes(user.pk))

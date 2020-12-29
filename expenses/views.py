@@ -30,6 +30,7 @@ def index(request):
     return render(request, 'expenses/index.html', context)
 
 
+@login_required(login_url='/authentication/login')
 def add_expense(request):
     categories = Category.objects.all()
     context = {
@@ -59,6 +60,7 @@ def add_expense(request):
         return redirect('expenses')
 
 
+@login_required(login_url='/authentication/login')
 def edit_expense(request, pk):
     expense = Expense.objects.get(pk=pk)
     categories = Category.objects.all()
@@ -95,6 +97,7 @@ def edit_expense(request, pk):
         return redirect('expenses')
 
 
+@login_required(login_url='/authentication/login')
 def delete_expense(request, pk):
     expense = Expense.objects.get(pk=pk)
     expense.delete()
@@ -191,3 +194,25 @@ def export_excel(request):
     wb.save(response)
 
     return response
+
+
+# def export_pdf(request):
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'inline; attachment; filename=Expenses' + str(datetime.datetime.now()) + '.pdf'
+#     response['Content-Transfer-Encoding'] = 'binary'
+#
+#     expenses = Expense.objects.filter(owner=request.user)
+#
+#     total = expenses.aggregate(Sum('amount'))
+#
+#     html_string = render_to_string('expenses/pdf-output.html', {'expenses': expenses, 'total': total})
+#     html = HTML(string=html_string)
+#     result = html.write_pdf()
+#
+#     with tempfile.NamedTemporaryFile(delete=True) as output:
+#         output.write(result)
+#         output.flush()
+#         output = open(output.name, 'rb')
+#         response.write(output.read())
+#
+#     return response
