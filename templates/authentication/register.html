@@ -2,55 +2,40 @@
 
 {% load static %}
 
+{% block title %}
+    Sign Up
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
 {% block content %}
-    <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <div class="card mt-5">
-                <div class="card-body">
-                    <div class="card-title py-3">
-                        <h4>Sign Up for a free account</h4>
-                    </div>
-
-                    <form action="{% url 'register' %}" method="post">
-                        {% include 'partials/messages.html' %}
-
-                        {% csrf_token %}
-
-                        <div class="form-group">
-                            <input type="text" name="username" id="usernameField" class="form-control form-control-sm"
-                                   placeholder="Username" value="{{ fieldValues.username }}">
-                        </div>
-                        <div class="invalid_feedback" style="display: none">
-
-                        </div>
-                        <p class="text-sm text-success usernameSuccessOutput"></p>
-                        <div class="form-group">
-                            <input type="email" name="email" id="emailField" class="form-control form-control-sm"
-                                   placeholder="Email" value="{{ fieldValues.email }}">
-                        </div>
-                        <div class="emailFeedBackArea" style="display: none">
-
-                        </div>
-                        <div class="form-group">
-                            <input type="password" name="password" id="passwordField"
-                                   class="form-control form-control-sm"
-                                   placeholder="Password">
-                            <small class="float-right py-2 showPasswordToggle">SHOW</small>
-                        </div>
-                        <input type="submit" value="Sign Up" class="btn btn-block btn-primary submit-btn">
-                    </form>
-                    <div class="container">
-                        <span class="text-lead lead">Already have an account? </span><a href="{% url 'login' %}">Sign
-                        In</a><br>
-                        <span class="text-lead lead">Forgot password? </span><a href="{% url 'request-password' %}">Reset
-                        password</a>
-                    </div>
-                </div>
-            </div>
+    <div class="background">
+        <div class="text">
+            <h1>Sign Up</h1>
+            <p>Have Account? <a href="{% url 'login' %}">Sign In</a></p>
+            <p>Forgot password? <a href="{% url 'request-password' %}">Reset Password</a></p>
         </div>
+        <div class="box">
+            <form class="form" action="{% url 'register' %}" method="post">
+                {% include 'partials/messages.html' %}
 
-        <div class="col-md-4"></div>
+                {% csrf_token %}
+
+                <input type="email" class="email" placeholder="Email" name="email" id="emailField"
+                       value="{{ fieldValues.email }}" required>
+                <div class="emailFeedBackArea" style="display: none">
+                </div>
+                <input type="text" class="username" placeholder="Username" name="username" id="usernameField"
+                       value="{{ fieldValues.username }}" required>
+                <div class="invalid_feedback" style="display: none">
+                </div>
+                <input type="password" class="password" placeholder="Password" name="password" id="passwordField" required>
+                <small class="float-right py-2 showPasswordToggle">SHOW</small>
+                <input type="submit" class="button submit-btn" value="Sign Up">
+            </form>
+        </div>
     </div>
 
     <script src="{% static 'js/register.js' %}"></script>

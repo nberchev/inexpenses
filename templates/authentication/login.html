@@ -2,46 +2,32 @@
 
 {% load static %}
 
+{% block title %}
+    Sign In
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
 {% block content %}
-    <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <div class="card mt-5">
-                <div class="card-body">
-                    <div class="card-title py-3">
-                        <h4>Sign In to your account</h4>
-                    </div>
-
-                    <form action="{% url 'login' %}" method="post">
-                        {% include 'partials/messages.html' %}
-
-                        {% csrf_token %}
-
-                        <div class="form-group">
-                            <input type="text" name="username" id="usernameField" class="form-control form-control-sm"
-                                   placeholder="Username" value="{{ fieldValues.username }}">
-                        </div>
-                        <div class="form-group">
-                            <input type="password" name="password" id="passwordField"
-                                   class="form-control form-control-sm"
-                                   placeholder="Password">
-                        </div>
-                        <input type="submit" value="Sign In" class="btn btn-block btn-primary submit-btn">
-                    </form>
-                    <div class="container">
-                        <span class="text-lead lead">Don't have an account? </span><a href="{% url 'register' %}">Sign
-                        Up</a><br>
-                        <span class="text-lead lead">Forgot password? </span><a href="{% url 'request-password' %}">Reset
-                        password</a>
-                    </div>
-                </div>
-
-
-            </div>
+    <div class="background">
+        <div class="text">
+            <h1>Sign In</h1>
+            <p>No Account? <a href="{% url 'register' %}">Sign Up</a></p>
+            <p>Forgot password? <a href="{% url 'request-password' %}">Reset Password</a></p>
         </div>
+        <div class="box">
+            <form class="form" action="{% url 'login' %}" method="post">
+                {% include 'partials/messages.html' %}
 
-        <div class="col-md-4"></div>
+                {% csrf_token %}
+                <input type="text" name="username" id="usernameField" class="username" placeholder="Username"
+                       value="{{ fieldValues.username }}" required>
+                <input type="password" name="password" id="passwordField" class="password" placeholder="Password"
+                       required>
+                <input type="submit" class="button" value="Sign In">
+            </form>
+        </div>
     </div>
-
-    <script src="{% static 'js/register.js' %}"></script>
 {% endblock %}
